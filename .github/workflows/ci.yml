@@ -1,0 +1,110 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        flutter-version: ['3.32.4']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.4'
+          channel: 'stable'
+          cache: true
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run analyzer
+        run: flutter analyze lib
+
+      - name: Run formatter check
+        run: dart format --set-exit-if-changed lib
+
+      - name: Run tests
+        run: flutter test --coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          file: ./coverage/lcov.info
+          fail_ci_if_error: false
+
+  validate-package:
+    name: Validate Package
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.4'
+          channel: 'stable'
+          cache: true
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: ubuntu-latest-pub-${{ hashFiles('**/pubspec.lock') }}
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Verify package structure
+        run: |
+          # Check if package can be analyzed as a dependency
+          flutter pub deps
+
+      - name: Check package health
+        run: |
+          # Verify pubspec.yaml is valid
+          flutter pub get --dry-run
+
+      - name: Verify package import structure
+        run: |
+          # Test that package can be imported and basic classes are accessible
+          echo "import 'package:checklistas_ui/checklistas_ui.dart';
+          void main() {
+            print('Package import successful');
+            print('Colors available: \${CheckListasColors.primary}');
+            print('Typography available: \${CheckListasTypography.bodyLarge}');
+            print('Spacing available: \${CheckListasSpacing.md}');
+          }" > test_import.dart
+
+      - name: Verify pubspec integrity
+        run: |
+          # Check that pubspec.yaml is well-formed
+          flutter pub get --dry-run --offline

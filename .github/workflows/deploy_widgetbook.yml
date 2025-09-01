@@ -1,0 +1,36 @@
+name: Deploy Widgetbook to GitHub Pages
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-widgetbook:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    concurrency:
+      group: "build-widgetbook"
+      cancel-in-progress: true
+    uses: ./.github/workflows/build_widgetbook.yml
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build-widgetbook
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

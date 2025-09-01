@@ -1,0 +1,32 @@
+name: checklistas_ui
+description: "CheckListas Ecological Atomic Design System"
+version: 0.1.0
+publish_to: none
+environment:
+  sdk: ^3.8.1
+  flutter: ">=3.24.0"
+topics:
+  - design-system
+  - atomic-design
+  - flutter
+  - ui-components
+  - whitelabel
+dependencies:
+  cached_network_image: ^3.3.1 
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_staggered_animations: ^1.1.1
+  flutter_svg: ^2.0.10     
+  google_fonts: ^6.1.0     
+  intl: ^0.20.2
+  provider: ^6.1.5+1
+  widgetbook: ^3.7.0
+  widgetbook_annotation: ^3.1.0
+dev_dependencies:
+  flutter_lints: ^5.0.0
+  flutter_test:
+    sdk: flutter
+flutter:
+  uses-material-design: true

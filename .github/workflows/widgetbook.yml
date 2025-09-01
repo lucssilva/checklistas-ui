@@ -1,0 +1,29 @@
+name: Widgetbook PR Preview
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'lib/**'
+      - 'lib/widgetbook.dart'
+      - 'pubspec.yaml'
+
+jobs:
+  build:
+    name: Build Widgetbook
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/build_widgetbook.yml
+    
+  pr-preview:
+    name: Deploy PR Preview (GitHub Pages)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    needs: build
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Deploy PR preview to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4

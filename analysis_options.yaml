@@ -1,0 +1,76 @@
+include: package:flutter_lints/flutter.yaml
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/generated_plugin_registrant.dart"
+    - "**/*.pb.dart"
+    - "**/*.pbenum.dart"
+    - "**/*.pbjson.dart"
+    - "**/*.pbserver.dart"
+    - "lib/generated/**"
+    - "**/l10n/*.dart"
+    - "**/*.mocks.dart"
+  errors:
+    always_declare_return_types: ignore
+    const_initialized_with_non_constant_value: error
+  language:
+    strict-casts: true
+formatter:
+  page_width: 120
+  trailing_commas: preserve
+linter:
+  rules:
+    always_declare_return_types: true
+    always_use_package_imports: false
+    avoid_annotating_with_dynamic: true
+    avoid_catching_errors: true
+    avoid_dynamic_calls: true
+    avoid_empty_else: true
+    avoid_function_literals_in_foreach_calls: true
+    avoid_init_to_null: true
+    avoid_print: true
+    avoid_relative_lib_imports: false
+    avoid_returning_null: true
+    avoid_returning_null_for_void: true
+    avoid_types_on_closure_parameters: false
+    avoid_unnecessary_containers: true
+    avoid_unused_constructor_parameters: true
+    camel_case_extensions: true
+    camel_case_types: true
+    constant_identifier_names: true
+    file_names: true
+    library_names: true
+    library_prefixes: true
+    non_constant_identifier_names: true
+    omit_local_variable_types: true
+    one_member_abstracts: false
+    package_api_docs: true
+    prefer_const_constructors: true
+    prefer_const_constructors_in_immutables: true
+    prefer_const_declarations: true
+    prefer_const_literals_to_create_immutables: true
+    prefer_double_quotes: false
+    prefer_expression_function_bodies: false
+    prefer_final_fields: true
+    prefer_final_in_for_each: false
+    prefer_final_locals: true
+    prefer_function_declarations_over_variables: false
+    prefer_generic_function_type_aliases: true
+    prefer_interpolation_to_compose_strings: false
+    prefer_iterable_whereType: true
+    prefer_mixin: true
+    prefer_relative_imports: true
+    public_member_api_docs: false
+    require_trailing_commas: false
+    sized_box_for_whitespace: true
+    slash_for_doc_comments: true
+    throw_in_finally: true
+    type_annotate_public_apis: false
+    unnecessary_brace_in_string_interps: false
+    unnecessary_lambdas: true
+    unnecessary_null_checks: true
+    unnecessary_nullable_for_final_variable_declarations: true
+    use_build_context_synchronously: true
+    use_key_in_widget_constructors: true
+    use_named_constants: true

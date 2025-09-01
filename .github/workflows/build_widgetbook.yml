@@ -1,0 +1,56 @@
+name: Build Widgetbook
+
+on:
+  workflow_call:
+    inputs:
+      flutter_version:
+        required: false
+        type: string
+        default: '3.32.4'
+      flutter_channel:
+        required: false
+        type: string
+        default: 'stable'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ inputs.flutter_version }}
+          channel: ${{ inputs.flutter_channel }}
+          cache: true
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: ubuntu-latest-pub-${{ hashFiles('**/pubspec.lock') }}
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Widgetbook for Web
+        run: flutter build web --target lib/widgetbook.dart --release
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        with:
+          enablement: true  # Ensure Pages is enabled for this repository
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './build/web'
